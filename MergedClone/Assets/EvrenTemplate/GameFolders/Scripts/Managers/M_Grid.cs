@@ -30,9 +30,79 @@ public class M_Grid : MonoBehaviour
 
     private void SetDice(Dice dice1, Dice dice2, GameObject diceContainer, bool isOneDice)
     {
-       
-    }
+        if (isOneDice)
+        {
+            int _controlX =Mathf.RoundToInt( dice1.transform.position.x);
+            int _controlY =Mathf.RoundToInt( dice1.transform.position.y);
+            if (InGridControl(_controlX, _controlY))
+            {
+                if (GridArray[_controlX, _controlY].IsFull == false)
+                {
+                    dice1.transform.SetParent(GridArray[_controlX, _controlY].transform);
+                    dice1.transform.localPosition = Vector3.zero;
+                    dice1.CurrentGridItem = GridArray[_controlX, _controlY];
+                    GridArray[_controlX, _controlY].CurrentDice = dice1;
+                    GridArray[_controlX, _controlY].IsFull = true;
+                    M_Spawner.I.CurrentDice1 = null;
+                    M_Spawner.OnSpawnDice?.Invoke();
+                }
+                else
+                {
+                    diceContainer.transform.localPosition = Vector3.zero;
+                }
+            }
+            else
+            {
+                diceContainer.transform.localPosition = Vector3.zero;
+            }
+        }
+        else
+        {
+            int _controlX1 = Mathf.RoundToInt(dice1.transform.position.x);
+            int _controlY1 = Mathf.RoundToInt(dice1.transform.position.y);
+            int _controlX2 = Mathf.RoundToInt(dice2.transform.position.x);
+            int _controlY2= Mathf.RoundToInt(dice2.transform.position.y);
+            if (InGridControl(_controlX1,_controlY1) && InGridControl(_controlX2,_controlY2))
+            {
+                if (GridArray[_controlX1, _controlY1].IsFull == false && GridArray[_controlX2, _controlY2].IsFull == false)
+                {
+                    dice1.transform.SetParent(GridArray[_controlX1, _controlY1].transform);
+                    dice1.transform.localPosition = Vector3.zero;
+                    dice1.CurrentGridItem = GridArray[_controlX1, _controlY1];
+                    GridArray[_controlX1, _controlY1].CurrentDice = dice1;
+                    GridArray[_controlX1, _controlY1].IsFull = true;
+                    M_Spawner.I.CurrentDice1 = null;
+                    dice2.transform.SetParent(GridArray[_controlX2, _controlY2].transform);
+                    dice2.transform.localPosition = Vector3.zero;
+                    dice2.CurrentGridItem = GridArray[_controlX2, _controlY2];
+                    GridArray[_controlX2, _controlY2].CurrentDice = dice2;
+                    GridArray[_controlX2, _controlY2].IsFull = true;
+                    M_Spawner.I.CurrentDice2 = null;
+                    M_Spawner.OnSpawnDice?.Invoke();
 
+                }
+                else
+                {
+                    diceContainer.transform.localPosition = Vector3.zero;
+                }
+            }
+            else
+            {
+                diceContainer.transform.localPosition = Vector3.zero;
+            }
+        }
+    }
+    bool InGridControl(int controlX , int controlY)
+    {
+        if (controlX>= 0 && 
+            controlX<= GridLenghtI && 
+            controlY >=0 &&
+            controlY<= GridLenghtJ)
+        {
+            return true;
+        }
+        return false;
+    }
     void GameCreate()
     {
        
