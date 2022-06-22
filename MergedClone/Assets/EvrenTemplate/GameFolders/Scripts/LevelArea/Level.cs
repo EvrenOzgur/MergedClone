@@ -70,4 +70,56 @@ public class Level : MonoBehaviour
     {
         print("GameNextLevel");
     }
+
+    private void OnEnable()
+    {
+        FingerGestures.OnFingerDown += FingerGestures_OnFingerDown;
+        FingerGestures.OnFingerMove += FingerGestures_OnFingerMove;
+        FingerGestures.OnFingerUp += FingerGestures_OnFingerUp;
+
+    }
+    private void OnDisable()
+    {
+        FingerGestures.OnFingerDown -= FingerGestures_OnFingerDown;
+        FingerGestures.OnFingerMove -= FingerGestures_OnFingerMove;
+        FingerGestures.OnFingerUp -= FingerGestures_OnFingerUp;
+
+    }
+
+    private void FingerGestures_OnFingerUp(int fingerIndex, Vector2 fingerPos, float timeHeldDown)
+    {
+    }
+
+    private void FingerGestures_OnFingerMove(int fingerIndex, Vector2 fingerPos)
+    {
+    }
+
+    private void FingerGestures_OnFingerDown(int fingerIndex, Vector2 fingerPos)
+    {
+    }
+
+    //RAYCAST ÝLE OBJE YAKALAMA.
+    GameObject PickObject(Vector2 screenPos)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(screenPos);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            return hit.collider.gameObject;
+        }
+
+        return null;
+    }
+
+    // RAYCAST ÝLE TAÞIMA POZÝSYONU.
+    Vector3 GetWorldPos(Vector2 screenPos)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(screenPos);
+
+        // we solve for intersection with y = 0 plane
+        float t = -ray.origin.z / ray.direction.z;
+
+        return ray.GetPoint(t);
+    }
 }
