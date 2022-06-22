@@ -12,6 +12,8 @@ public class M_Grid : MonoBehaviour
 
     public int GridLenghtI = 5;
     public int GridLenghtJ = 5;
+
+    List<GridItem> foundGridItems;
     private void Awake()
     {
         GridCreate();
@@ -92,12 +94,86 @@ public class M_Grid : MonoBehaviour
             }
         }
     }
+    void RecursiveSucceedControl()
+    {
+
+    }
+    void RecursiveFoundNearGrids(List<GridItem> placedGridItemList , int placedGridItemNumber )
+    {
+        GridItem _placedGridItem = placedGridItemList[placedGridItemNumber];
+        _placedGridItem.IsCheck = true;
+        List<GridItem> _foundGridItems = new List<GridItem>();
+        GridItem _controlGridItem ;
+        if (InGridControl(_placedGridItem.IndexI -1, _placedGridItem.IndexJ))
+        {
+            _controlGridItem = GridArray[_placedGridItem.IndexI - 1, _placedGridItem.IndexJ];
+            if (NearGridControl(_placedGridItem , _controlGridItem , placedGridItemList))
+            {
+                _controlGridItem.IsCheck = true;
+                _controlGridItem.FounderGridItem = _placedGridItem;
+                foundGridItems.Add(_controlGridItem);
+                _foundGridItems.Add(_controlGridItem);
+
+            }
+        }
+        if (InGridControl(_placedGridItem.IndexI + 1, _placedGridItem.IndexJ))
+        {
+            _controlGridItem = GridArray[_placedGridItem.IndexI + 1, _placedGridItem.IndexJ];
+            if (NearGridControl(_placedGridItem, _controlGridItem, placedGridItemList))
+            {
+                _controlGridItem.IsCheck = true;
+                _controlGridItem.FounderGridItem = _placedGridItem;
+                foundGridItems.Add(_controlGridItem);
+                _foundGridItems.Add(_controlGridItem);
+
+            }
+        }
+        if (InGridControl(_placedGridItem.IndexI , _placedGridItem.IndexJ-1))
+        {
+            _controlGridItem = GridArray[_placedGridItem.IndexI , _placedGridItem.IndexJ-1];
+            if (NearGridControl(_placedGridItem, _controlGridItem, placedGridItemList))
+            {
+                _controlGridItem.IsCheck = true;
+                _controlGridItem.FounderGridItem = _placedGridItem;
+                foundGridItems.Add(_controlGridItem);
+                _foundGridItems.Add(_controlGridItem);
+
+            }
+        }
+        if (InGridControl(_placedGridItem.IndexI , _placedGridItem.IndexJ+1))
+        {
+            _controlGridItem = GridArray[_placedGridItem.IndexI , _placedGridItem.IndexJ+1];
+            if (NearGridControl(_placedGridItem, _controlGridItem, placedGridItemList))
+            {
+                _controlGridItem.IsCheck = true;
+                _controlGridItem.FounderGridItem = _placedGridItem;
+                foundGridItems.Add(_controlGridItem);
+                _foundGridItems.Add(_controlGridItem);
+
+            }
+        }
+        for (int i = 0; i < _foundGridItems.Count; i++)
+        {
+            RecursiveFoundNearGrids(_foundGridItems , i);
+        }
+    }
     bool InGridControl(int controlX , int controlY)
     {
         if (controlX>= 0 && 
             controlX<= GridLenghtI && 
             controlY >=0 &&
             controlY<= GridLenghtJ)
+        {
+            return true;
+        }
+        return false;
+    }
+    bool NearGridControl(GridItem gridItem ,GridItem controlGridItem , List<GridItem> gridItemList)
+    {
+        if (controlGridItem.IsCheck == false &&
+            controlGridItem.IsFull &&
+            controlGridItem.CurrentDice.DiceNumber == gridItem.CurrentDice.DiceNumber &&
+            gridItemList.Contains(controlGridItem) == false)
         {
             return true;
         }
