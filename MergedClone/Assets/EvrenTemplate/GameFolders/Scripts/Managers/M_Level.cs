@@ -8,11 +8,12 @@ public class M_Level : MonoBehaviour
     public static Action<int> OnSetScore;
 
     public Level[] Levels;
-
+    
     [HideInInspector] public Level CurrentLevel;
    [HideInInspector] public int LevelIndex;
     [HideInInspector] public int HighScore ;
     [HideInInspector] public int CurrentLevelScore = 0;
+   
     private void Awake()
     {
         if (PlayerPrefs.HasKey("LevelIndex"))
@@ -31,6 +32,7 @@ public class M_Level : MonoBehaviour
         {
             HighScore = 0;
         }
+       
     }
    
    

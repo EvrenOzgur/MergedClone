@@ -5,33 +5,18 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
+  
 
     private void Awake()
     {
-        M_Observer.OnGameCreate += GameCreate;
-        M_Observer.OnGameStart += GameStart;
-        M_Observer.OnGameReady += GameReady;
-        M_Observer.OnGamePause += GamePause;
-        M_Observer.OnGameContinue += GameContinue;
-        M_Observer.OnGameFail += GameFail;
-        M_Observer.OnGameComplete += GameComplete;
-        M_Observer.OnGameRetry += GameRetry;
-        M_Observer.OnGameNextLevel += GameNextLevel;
+
     }
     private void OnDestroy()
     {
-        M_Observer.OnGameCreate -= GameCreate;
-        M_Observer.OnGameStart -= GameStart;
-        M_Observer.OnGameReady -= GameReady;
-        M_Observer.OnGamePause -= GamePause;
-        M_Observer.OnGameContinue -= GameContinue;
-        M_Observer.OnGameFail -= GameFail;
-        M_Observer.OnGameComplete -= GameComplete;
-        M_Observer.OnGameRetry -= GameRetry;
-        M_Observer.OnGameNextLevel -= GameNextLevel;
+      
     }
 
-
+    
 
     private void GameCreate()
     {
@@ -76,14 +61,30 @@ public class Level : MonoBehaviour
         FingerGestures.OnFingerDown += FingerGestures_OnFingerDown;
         FingerGestures.OnFingerMove += FingerGestures_OnFingerMove;
         FingerGestures.OnFingerUp += FingerGestures_OnFingerUp;
-
+        M_Observer.OnGameCreate += GameCreate;
+        M_Observer.OnGameStart += GameStart;
+        M_Observer.OnGameReady += GameReady;
+        M_Observer.OnGamePause += GamePause;
+        M_Observer.OnGameContinue += GameContinue;
+        M_Observer.OnGameFail += GameFail;
+        M_Observer.OnGameComplete += GameComplete;
+        M_Observer.OnGameRetry += GameRetry;
+        M_Observer.OnGameNextLevel += GameNextLevel;
     }
     private void OnDisable()
     {
         FingerGestures.OnFingerDown -= FingerGestures_OnFingerDown;
         FingerGestures.OnFingerMove -= FingerGestures_OnFingerMove;
         FingerGestures.OnFingerUp -= FingerGestures_OnFingerUp;
-
+        M_Observer.OnGameCreate -= GameCreate;
+        M_Observer.OnGameStart -= GameStart;
+        M_Observer.OnGameReady -= GameReady;
+        M_Observer.OnGamePause -= GamePause;
+        M_Observer.OnGameContinue -= GameContinue;
+        M_Observer.OnGameFail -= GameFail;
+        M_Observer.OnGameComplete -= GameComplete;
+        M_Observer.OnGameRetry -= GameRetry;
+        M_Observer.OnGameNextLevel -= GameNextLevel;
     }
 
     private void FingerGestures_OnFingerUp(int fingerIndex, Vector2 fingerPos, float timeHeldDown)

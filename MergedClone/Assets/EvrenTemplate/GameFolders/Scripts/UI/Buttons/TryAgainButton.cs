@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TryAgainButton : MonoBehaviour
@@ -20,6 +21,8 @@ public class TryAgainButton : MonoBehaviour
     }
     void ButtonClicked()
     {
-        M_Observer.OnGameRetry?.Invoke();
+        //M_Observer.OnGameRetry?.Invoke();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
     }
 }

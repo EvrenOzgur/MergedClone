@@ -26,6 +26,7 @@ public class M_Spawner : MonoBehaviour
     private void OnEnable()
     {
         M_Observer.OnGameStart += GameStart;
+        M_Observer.OnGameFail += GameFail;
         FingerGestures.OnFingerDown += FingerGestures_OnFingerDown;
         FingerGestures.OnFingerMove += FingerGestures_OnFingerMove;
         FingerGestures.OnFingerUp += FingerGestures_OnFingerUp;
@@ -34,11 +35,18 @@ public class M_Spawner : MonoBehaviour
     private void OnDisable()
     {
         M_Observer.OnGameStart -= GameStart;
+        M_Observer.OnGameFail -= GameFail;
+
         FingerGestures.OnFingerDown -= FingerGestures_OnFingerDown;
         FingerGestures.OnFingerMove -= FingerGestures_OnFingerMove;
         FingerGestures.OnFingerUp -= FingerGestures_OnFingerUp;
         OnSpawnDice -= SpawnDice;
 
+    }
+
+    private void GameFail()
+    {
+       canClick = false;
     }
 
     private void FingerGestures_OnFingerUp(int fingerIndex, Vector2 fingerPos, float timeHeldDown)
