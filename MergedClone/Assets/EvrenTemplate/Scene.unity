@@ -319,7 +319,7 @@ MonoBehaviour:
   GamePanelPrefab: {fileID: -8041338296548234287, guid: c9d3e09c9436b6741996f524d331fe93, type: 3}
   PausePanelPrefab: {fileID: -2251378134801262237, guid: c60baaef32ce676449ee5b4c925303a9, type: 3}
   CompletePanelPrefab: {fileID: 2272254519187065252, guid: 8b9a2d82dd9299146a7811ad6753484a, type: 3}
-  GameFailPanel: {fileID: 0}
+  GameFailPanel: {fileID: 2272254519187065252, guid: d222694339d366b42801331f8ee31d43, type: 3}
   CurrentPanel: {fileID: 0}
 --- !u!114 &460411347
 MonoBehaviour:
@@ -720,6 +720,7 @@ MonoBehaviour:
   CurrentDice2: {fileID: 0}
   SpawnDiceCount: 2
   InstantiateDiceNumber: 3
+  InstantiateBoomDiceNumber: 0
   IsOneDice: 0
   DiceContainerOffset: {x: 0, y: 1, z: -1}
 --- !u!1 &1623731526

@@ -9,7 +9,7 @@ public class M_Grid : MonoBehaviour
 {
     public static Action<Dice, Dice, GameObject, bool> OnSetDice;
     public GridItem GridItemPrefab;
-    
+
     [HideInInspector] public GridItem[,] GridArray;
 
     public int GridLenghtI = 5;
@@ -56,9 +56,9 @@ public class M_Grid : MonoBehaviour
                     List<GridItem> _placedGridItemList = new List<GridItem>();
                     _placedGridItemList.Add(GridArray[_controlX, _controlY]);
                     RecursiveSucceedControl(_placedGridItemList);
-
                     M_Spawner.I.CurrentDice1 = null;
-                    M_Spawner.OnSpawnDice?.Invoke();
+                    GameContinueControl();
+
                 }
                 else
                 {
@@ -72,7 +72,7 @@ public class M_Grid : MonoBehaviour
         }
         else
         {
-        
+
             int _controlX1 = Mathf.RoundToInt(_dice1.transform.position.x);
             int _controlY1 = Mathf.RoundToInt(_dice1.transform.position.y);
             int _controlX2 = Mathf.RoundToInt(_dice2.transform.position.x);
@@ -98,8 +98,7 @@ public class M_Grid : MonoBehaviour
 
                     RecursiveSucceedControl(_placedGridItemList);
                     M_Spawner.I.CurrentDice2 = null;
-                    M_Spawner.OnSpawnDice?.Invoke();
-
+                    GameContinueControl();
                 }
                 else
                 {
@@ -135,41 +134,41 @@ public class M_Grid : MonoBehaviour
                         int _diceNumber = foundGridItemList[0].CurrentDice.DiceNumber;
                         for (int k = 0; k < foundGridItemList.Count; k++)
                         {
-                          
-                                GridItem _foundGridItem = foundGridItemList[k];
-                                List<Vector3> _foundDicePathList = new List<Vector3>();
-                                GridItem _founderGridItem = _foundGridItem.FounderGridItem;
-                                _foundDicePathList.Add(_foundGridItem.transform.position + Vector3.back);
-                                float _diceSpeed = 2;
-                                while (_founderGridItem != null)
-                                {
-                                    _foundDicePathList.Add(_founderGridItem.transform.position + Vector3.back);
-                                    _founderGridItem = _founderGridItem.FounderGridItem;
-                                }
-                                _foundGridItem.CurrentDice.transform.localEulerAngles = new Vector3(0, 180, 0);
-                                _foundGridItem.CurrentDice.transform.DOPath(_foundDicePathList.ToArray(), _diceSpeed).SetSpeedBased();
-                                float _pathTime = CalculateDicePathDistance(_foundDicePathList);
-                                if (_delay < _pathTime)
-                                {
-                                    _delay = _pathTime;
-                                }
-                                Destroy(_foundGridItem.CurrentDice.gameObject, _delay + 0.1f);
-                                _foundGridItem.CurrentDice = null;
-                                _foundGridItem.IsFull = false;
-                            
-                          
+
+                            GridItem _foundGridItem = foundGridItemList[k];
+                            List<Vector3> _foundDicePathList = new List<Vector3>();
+                            GridItem _founderGridItem = _foundGridItem.FounderGridItem;
+                            _foundDicePathList.Add(_foundGridItem.transform.position + Vector3.back);
+                            float _diceSpeed = 2;
+                            while (_founderGridItem != null)
+                            {
+                                _foundDicePathList.Add(_founderGridItem.transform.position + Vector3.back);
+                                _founderGridItem = _founderGridItem.FounderGridItem;
+                            }
+                            _foundGridItem.CurrentDice.transform.localEulerAngles = new Vector3(0, 180, 0);
+                            _foundGridItem.CurrentDice.transform.DOPath(_foundDicePathList.ToArray(), _diceSpeed).SetSpeedBased();
+                            float _pathTime = CalculateDicePathDistance(_foundDicePathList);
+                            if (_delay < _pathTime)
+                            {
+                                _delay = _pathTime;
+                            }
+                            Destroy(_foundGridItem.CurrentDice.gameObject, _delay + 0.1f);
+                            _foundGridItem.CurrentDice = null;
+                            _foundGridItem.IsFull = false;
+
+
                         }
                         for (int k = 0; k < foundGridItemList.Count; k++)
                         {
                             foundGridItemList[k].FounderGridItem = null;
                         }
-                        if (_diceNumber!= 0)
+                        if (_diceNumber != 0)
                         {
-                            int _instantiateDiceNumber = (_diceNumber + 1) % (M_Spawner.I.DicePrefabs.Length );
+                            int _instantiateDiceNumber = (_diceNumber + 1) % (M_Spawner.I.DicePrefabs.Length);
                             _placedGridItem.CurrentDice = Instantiate(M_Spawner.I.DicePrefabs[_instantiateDiceNumber], _placedGridItem.transform);
                             _placedGridItem.CurrentDice.DiceNumber = _instantiateDiceNumber;
                             _placedGridItem.IsFull = true;
-                            if (M_Spawner.I.InstantiateDiceNumber < _instantiateDiceNumber + 1) 
+                            if (M_Spawner.I.InstantiateDiceNumber < _instantiateDiceNumber + 1)
                             {
                                 M_Spawner.I.InstantiateDiceNumber++;
                                 if (M_Spawner.I.InstantiateDiceNumber >= M_Spawner.I.DicePrefabs.Length)
@@ -177,30 +176,30 @@ public class M_Grid : MonoBehaviour
                                     M_Spawner.I.InstantiateBoomDiceNumber = 0;
                                 }
                             }
-                            _placedGridItem.CurrentDice.transform.localPosition = - Vector3.forward / 2;
-                            _placedGridItem.CurrentDice.transform.localEulerAngles = new Vector3(0,180,0);
-                            _placedGridItem.CurrentDice.transform.DOLocalRotate(Vector3.zero , 0.25f).SetDelay(_delay-0.25f);
+                            _placedGridItem.CurrentDice.transform.localPosition = -Vector3.forward / 2;
+                            _placedGridItem.CurrentDice.transform.localEulerAngles = new Vector3(0, 180, 0);
+                            _placedGridItem.CurrentDice.transform.DOLocalRotate(Vector3.zero, 0.25f).SetDelay(_delay - 0.25f);
                             _placedGridItem.CurrentDice.transform.DOShakeRotation(_delay - 0.25f, 30, 30);
                             _succeedList.Add(_placedGridItem);
                         }
                         else
                         {
-                           _placedGridItem.CurrentDice = Instantiate(M_Spawner.I.DicePrefabs[0] , _placedGridItem.transform);
-                           _placedGridItem.CurrentDice.transform.localScale = Vector3.zero;
-                           _placedGridItem.CurrentDice.transform.DOPunchScale(new Vector3(3,3,3) , 2, 30);
-                            BoomDice(_placedGridItem , _delay);
-                            
+                            _placedGridItem.CurrentDice = Instantiate(M_Spawner.I.DicePrefabs[0], _placedGridItem.transform);
+                            _placedGridItem.CurrentDice.transform.localScale = Vector3.zero;
+                            _placedGridItem.CurrentDice.transform.DOPunchScale(new Vector3(3, 3, 3), 2, 30);
+                            BoomDice(_placedGridItem, _delay);
+
                         }
                     }
                 }
             }
             for (int i = 0; i < _succeedList.Count; i++)
             {
-                StartCoroutine(RecursiveSucceedControlIE(new List<GridItem>() { _succeedList[i] } , _delay));
+                StartCoroutine(RecursiveSucceedControlIE(new List<GridItem>() { _succeedList[i] }, _delay));
             }
         }
     }
-    IEnumerator RecursiveSucceedControlIE( List<GridItem> placedGridItemList , float delay)
+    IEnumerator RecursiveSucceedControlIE(List<GridItem> placedGridItemList, float delay)
     {
         yield return new WaitForSeconds(delay);
         RecursiveSucceedControl(placedGridItemList);
@@ -210,7 +209,7 @@ public class M_Grid : MonoBehaviour
         GridItem _placedGridItem = placedGridItemList[placedGridItemNumber];
         _placedGridItem.IsCheck = true;
         List<GridItem> _foundGridItems = new List<GridItem>();
-        GridItem _controlGridItem=null;
+        GridItem _controlGridItem = null;
         if (InGridControl(_placedGridItem.IndexI - 1, _placedGridItem.IndexJ))
         {
             _controlGridItem = GridArray[_placedGridItem.IndexI - 1, _placedGridItem.IndexJ];
@@ -284,19 +283,19 @@ public class M_Grid : MonoBehaviour
         }
         return _pathDistance;
     }
-    void BoomDice(GridItem boomGridItem , float delayTime) 
+    void BoomDice(GridItem boomGridItem, float delayTime)
     {
-        List<GridItem> _boomGridItemList = new List<GridItem> ();
+        List<GridItem> _boomGridItemList = new List<GridItem>();
         _boomGridItemList.Add(boomGridItem);
-        for (int i = boomGridItem.IndexI-1; i < boomGridItem.IndexI+2; i++)
+        for (int i = boomGridItem.IndexI - 1; i < boomGridItem.IndexI + 2; i++)
         {
-            for (int  j = boomGridItem.IndexJ -1;  j <boomGridItem.IndexJ+2;  j++)
+            for (int j = boomGridItem.IndexJ - 1; j < boomGridItem.IndexJ + 2; j++)
             {
-                if (InGridControl(i,j))
+                if (InGridControl(i, j))
                 {
-                    if (GridArray[i,j].IsFull)
+                    if (GridArray[i, j].IsFull)
                     {
-                        _boomGridItemList.Add(GridArray[i,j]);
+                        _boomGridItemList.Add(GridArray[i, j]);
                     }
                 }
             }
@@ -313,14 +312,14 @@ public class M_Grid : MonoBehaviour
                 _boomGridItem.IsFull = false;
                 _boomGridItem.CurrentDice = null;
             }
-           
+
         }
     }
     bool NearGridControl(GridItem gridItem, GridItem controlGridItem, List<GridItem> gridItemList)
     {
         if (controlGridItem.IsCheck == false &&
             controlGridItem.IsFull &&
-            controlGridItem.CurrentDice!=null &&
+            controlGridItem.CurrentDice != null &&
             controlGridItem.CurrentDice.DiceNumber == gridItem.CurrentDice.DiceNumber &&
             gridItemList.Contains(controlGridItem) == false)
         {
@@ -331,6 +330,72 @@ public class M_Grid : MonoBehaviour
     void GameCreate()
     {
 
+    }
+    void GameContinueControl()
+    {
+        int _counter = 0;
+        for (int i = 0; i < GridLenghtI; i++)
+        {
+            for (int j = 0; j < GridLenghtJ; j++)
+            {
+
+                if (!GridArray[i, j].IsFull)
+                {
+                    _counter = 1;
+                    if (InGridControl(i + 1, j))
+                    {
+                        if (!GridArray[i + 1, j].IsFull)
+                        {
+                            _counter = 2;
+                        }
+                    }
+                }
+
+                if (_counter == 2) break;
+            }
+            if (_counter == 2) break;
+        }
+        if (_counter!=2)
+        {
+            for (int i = 0; i < GridLenghtI; i++)
+            {
+                for (int j = 0; j < GridLenghtJ; j++)
+                {
+                    if (!GridArray[i, j].IsFull)
+                    {
+                        _counter = 1;
+                        if (InGridControl(i, j + 1))
+                        {
+                            if (!GridArray[i, j + 1].IsFull)
+                            {
+                                _counter = 2;
+                            }
+                        }
+                    }
+                    if (_counter == 2) break;
+                }
+                if (_counter == 2) break;
+            }
+        }
+        if (_counter == 0)
+        {
+            M_Observer.OnGameFail?.Invoke();
+        }
+        else
+        {
+            if (_counter == 1)
+            {
+                M_Spawner.I.SpawnDiceCount = 1;
+                M_Spawner.OnSpawnDice?.Invoke();
+
+            }
+            else
+            {
+                M_Spawner.I.SpawnDiceCount = 2;
+                M_Spawner.OnSpawnDice?.Invoke();
+
+            }
+        }
     }
     void GridCreate()
     {
