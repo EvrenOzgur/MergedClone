@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class Dice : MonoBehaviour
 {
-    [HideInInspector] public int DiceNumber;
-    [HideInInspector] public GridItem CurrentGridItem;
+     public int DiceNumber;
+     public GridItem CurrentGridItem;
 }

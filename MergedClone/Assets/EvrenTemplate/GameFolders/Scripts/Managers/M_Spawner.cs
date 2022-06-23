@@ -14,6 +14,7 @@ public class M_Spawner : MonoBehaviour
     
      public int SpawnDiceCount = 2;
      public int InstantiateDiceNumber = 6;
+    public int InstantiateBoomDiceNumber = 1;
     [HideInInspector] public bool IsOneDice;
     public Vector3 DiceContainerOffset = new Vector3(0,1,-1);
     Vector3 fingerFirstPos;
@@ -60,7 +61,7 @@ public class M_Spawner : MonoBehaviour
             }
             else
             {
-                M_Grid.OnSetDice.Invoke(CurrentDice1 , CurrentDice2 , DiceContainer , IsOneDice);
+                M_Grid.OnSetDice?.Invoke(CurrentDice1 , CurrentDice2 , DiceContainer , IsOneDice);
             }
         }
     }
@@ -131,8 +132,8 @@ public class M_Spawner : MonoBehaviour
         {
             while (_diceNumber1>=_diceNumber2)
             {
-                _diceNumber1 = UnityEngine.Random.Range(1,InstantiateDiceNumber);
-                _diceNumber2 = UnityEngine.Random.Range(1,InstantiateDiceNumber);
+                _diceNumber1 = UnityEngine.Random.Range(InstantiateBoomDiceNumber,InstantiateDiceNumber);
+                _diceNumber2 = UnityEngine.Random.Range(InstantiateBoomDiceNumber,InstantiateDiceNumber);
             }
             Dice _dice1 = Instantiate(DicePrefabs[_diceNumber1], DiceContainer.transform);
             _dice1.transform.localPosition = new Vector3(0.5f, 0, 0);

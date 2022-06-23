@@ -719,7 +719,7 @@ MonoBehaviour:
   CurrentDice1: {fileID: 0}
   CurrentDice2: {fileID: 0}
   SpawnDiceCount: 2
-  InstantiateDiceNumber: 6
+  InstantiateDiceNumber: 3
   IsOneDice: 0
   DiceContainerOffset: {x: 0, y: 1, z: -1}
 --- !u!1 &1623731526
