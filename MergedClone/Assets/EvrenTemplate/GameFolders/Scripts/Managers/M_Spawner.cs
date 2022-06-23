@@ -135,15 +135,31 @@ public class M_Spawner : MonoBehaviour
                 _diceNumber1 = UnityEngine.Random.Range(InstantiateBoomDiceNumber,InstantiateDiceNumber);
                 _diceNumber2 = UnityEngine.Random.Range(InstantiateBoomDiceNumber,InstantiateDiceNumber);
             }
-            Dice _dice1 = Instantiate(DicePrefabs[_diceNumber1], DiceContainer.transform);
-            _dice1.transform.localPosition = new Vector3(0.5f, 0, 0);
-            _dice1.DiceNumber = _diceNumber1;
-            CurrentDice1 = _dice1;
-            Dice _dice2 = Instantiate(DicePrefabs[_diceNumber2] , DiceContainer.transform);
-            _dice2.transform.localPosition = new Vector3(-0.5f,0,0);
-            _dice2.DiceNumber = _diceNumber2;
-            CurrentDice2 = _dice2;
-            IsOneDice = false;
+            if (_diceNumber1 == 0)
+            {
+                Dice _dice1 = Instantiate(DicePrefabs[_diceNumber2], DiceContainer.transform);
+                _dice1.transform.localPosition = new Vector3(0.525f, 0, 0);
+                _dice1.DiceNumber = _diceNumber2;
+                CurrentDice1 = _dice1;
+                Dice _dice2 = Instantiate(DicePrefabs[_diceNumber1], DiceContainer.transform);
+                _dice2.transform.localPosition = new Vector3(-0.525f, 0, 0);
+                _dice2.DiceNumber = _diceNumber1;
+                CurrentDice2 = _dice2;
+                IsOneDice = false;
+            }
+            else
+            {
+                Dice _dice1 = Instantiate(DicePrefabs[_diceNumber1], DiceContainer.transform);
+                _dice1.transform.localPosition = new Vector3(0.525f, 0, 0);
+                _dice1.DiceNumber = _diceNumber1;
+                CurrentDice1 = _dice1;
+                Dice _dice2 = Instantiate(DicePrefabs[_diceNumber2], DiceContainer.transform);
+                _dice2.transform.localPosition = new Vector3(-0.525f, 0, 0);
+                _dice2.DiceNumber = _diceNumber2;
+                CurrentDice2 = _dice2;
+                IsOneDice = false;
+            }
+           
         }
     }
     //RAYCAST ÝLE OBJE YAKALAMA.

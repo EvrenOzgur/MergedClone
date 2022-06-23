@@ -48,14 +48,17 @@ public class M_Grid : MonoBehaviour
             {
                 if (GridArray[_controlX, _controlY].IsFull == false)
                 {
-                    _dice1.transform.SetParent(GridArray[_controlX, _controlY].transform);
-                    _dice1.transform.localPosition = new Vector3(0, 0, -0.1f);
-                    _dice1.CurrentGridItem = GridArray[_controlX, _controlY];
-                    GridArray[_controlX, _controlY].CurrentDice = _dice1;
+                    Dice _gridDice = Instantiate(_dice1, GridArray[_controlX, _controlY].transform);
+                    _gridDice.transform.localPosition = new Vector3(0, 0, -0.1f);
+                    _gridDice.transform.eulerAngles = _dice1.transform.eulerAngles;
+                    _gridDice.CurrentGridItem = GridArray[_controlX, _controlY];
+                    GridArray[_controlX, _controlY].CurrentDice = _gridDice;
+
                     GridArray[_controlX, _controlY].IsFull = true;
                     List<GridItem> _placedGridItemList = new List<GridItem>();
                     _placedGridItemList.Add(GridArray[_controlX, _controlY]);
-                    RecursiveSucceedControl(_placedGridItemList);
+                   StartCoroutine( RecursiveSucceedControlIE(_placedGridItemList));
+                    Destroy(_dice1.gameObject);
                     M_Spawner.I.CurrentDice1 = null;
                     GameContinueControl();
 
@@ -81,23 +84,28 @@ public class M_Grid : MonoBehaviour
             {
                 if (GridArray[_controlX1, _controlY1].IsFull == false && GridArray[_controlX2, _controlY2].IsFull == false)
                 {
-                    _dice1.transform.SetParent(GridArray[_controlX1, _controlY1].transform);
-                    _dice1.transform.localPosition = new Vector3(0, 0, -0.1f);
-                    _dice1.CurrentGridItem = GridArray[_controlX1, _controlY1];
-                    GridArray[_controlX1, _controlY1].CurrentDice = _dice1;
+                    Dice _gridDice1 = Instantiate(_dice1, GridArray[_controlX1, _controlY1].transform);
+                    _gridDice1.transform.localPosition = new Vector3(0, 0, -0.1f);
+                    _gridDice1.transform.eulerAngles = _dice1.transform.eulerAngles;
+                    _gridDice1.CurrentGridItem = GridArray[_controlX1, _controlY1];
+                    GridArray[_controlX1, _controlY1].CurrentDice = _gridDice1;
                     GridArray[_controlX1, _controlY1].IsFull = true;
+                    Destroy(_dice1.gameObject);
                     M_Spawner.I.CurrentDice1 = null;
-                    _dice2.transform.SetParent(GridArray[_controlX2, _controlY2].transform);
-                    _dice2.transform.localPosition = new Vector3(0,0,-0.1f);
-                    _dice2.CurrentGridItem = GridArray[_controlX2, _controlY2];
-                    GridArray[_controlX2, _controlY2].CurrentDice = _dice2;
+                    Dice _gridDice2 = Instantiate(_dice2, GridArray[_controlX2, _controlY2].transform);
+                    _gridDice2.transform.localPosition = new Vector3(0, 0, -0.1f);
+                    _gridDice2.transform.eulerAngles = _dice2.transform.eulerAngles;
+                    _gridDice2.CurrentGridItem = GridArray[_controlX2, _controlY2];
+                    GridArray[_controlX2, _controlY2].CurrentDice = _gridDice2;
                     GridArray[_controlX2, _controlY2].IsFull = true;
+                    Destroy(_dice2.gameObject);
+                    M_Spawner.I.CurrentDice2 = null;
                     List<GridItem> _placedGridItemList = new List<GridItem>();
                     _placedGridItemList.Add(GridArray[_controlX1, _controlY1]);
                     _placedGridItemList.Add(GridArray[_controlX2, _controlY2]);
 
-                    RecursiveSucceedControl(_placedGridItemList);
-                    M_Spawner.I.CurrentDice2 = null;
+                    StartCoroutine(RecursiveSucceedControlIE(_placedGridItemList));
+
                     GameContinueControl();
                 }
                 else
@@ -111,7 +119,7 @@ public class M_Grid : MonoBehaviour
             }
         }
     }
-    void RecursiveSucceedControl(List<GridItem> placedGridItemList)
+    IEnumerator RecursiveSucceedControlIE(List<GridItem> placedGridItemList)
     {
         if (placedGridItemList != null)
         {
@@ -132,14 +140,24 @@ public class M_Grid : MonoBehaviour
                     if (foundGridItemList.Count > 2)
                     {
                         int _diceNumber = foundGridItemList[0].CurrentDice.DiceNumber;
-                        for (int k = 0; k < foundGridItemList.Count; k++)
+                        if (_diceNumber!=0)
+                        {
+                            M_Level.OnSetScore?.Invoke(_diceNumber * foundGridItemList.Count);
+
+                        }
+                        else
+                        {
+                            M_Level.OnSetScore?.Invoke(25*foundGridItemList.Count);
+
+                        }
+                        for (int k = foundGridItemList.Count-1; k >= 0; k--)
                         {
 
                             GridItem _foundGridItem = foundGridItemList[k];
                             List<Vector3> _foundDicePathList = new List<Vector3>();
                             GridItem _founderGridItem = _foundGridItem.FounderGridItem;
                             _foundDicePathList.Add(_foundGridItem.transform.position + Vector3.back);
-                            float _diceSpeed = 2;
+                            float _diceSpeed = 4;
                             while (_founderGridItem != null)
                             {
                                 _foundDicePathList.Add(_founderGridItem.transform.position + Vector3.back);
@@ -148,6 +166,10 @@ public class M_Grid : MonoBehaviour
                             _foundGridItem.CurrentDice.transform.localEulerAngles = new Vector3(0, 180, 0);
                             _foundGridItem.CurrentDice.transform.DOPath(_foundDicePathList.ToArray(), _diceSpeed).SetSpeedBased();
                             float _pathTime = CalculateDicePathDistance(_foundDicePathList);
+                            if (k==0)
+                            {
+                                _foundGridItem.CurrentDice.transform.DOScale(Vector3.zero, 0.1f).SetDelay(_delay);
+                            }
                             if (_delay < _pathTime)
                             {
                                 _delay = _pathTime;
@@ -162,6 +184,7 @@ public class M_Grid : MonoBehaviour
                         {
                             foundGridItemList[k].FounderGridItem = null;
                         }
+                        yield return new WaitForSeconds(_delay);
                         if (_diceNumber != 0)
                         {
                             int _instantiateDiceNumber = (_diceNumber + 1) % (M_Spawner.I.DicePrefabs.Length);
@@ -177,16 +200,16 @@ public class M_Grid : MonoBehaviour
                                 }
                             }
                             _placedGridItem.CurrentDice.transform.localPosition = -Vector3.forward / 2;
-                            _placedGridItem.CurrentDice.transform.localEulerAngles = new Vector3(0, 180, 0);
-                            _placedGridItem.CurrentDice.transform.DOLocalRotate(Vector3.zero, 0.25f).SetDelay(_delay - 0.25f);
-                            _placedGridItem.CurrentDice.transform.DOShakeRotation(_delay - 0.25f, 30, 30);
+                            _placedGridItem.CurrentDice.transform.localEulerAngles = Vector3.zero;
+                            _placedGridItem.CurrentDice.transform.DOLocalRotate(new Vector3(0,180,0), 0.25f).SetDelay(_delay - 0.75f);
+                            _placedGridItem.CurrentDice.transform.DOShakeRotation(_delay - 0.75f, 30, 30);
                             _succeedList.Add(_placedGridItem);
                         }
                         else
                         {
                             _placedGridItem.CurrentDice = Instantiate(M_Spawner.I.DicePrefabs[0], _placedGridItem.transform);
                             _placedGridItem.CurrentDice.transform.localScale = Vector3.zero;
-                            _placedGridItem.CurrentDice.transform.DOPunchScale(new Vector3(3, 3, 3), 2, 30);
+                            _placedGridItem.CurrentDice.transform.DOPunchScale(new Vector3(3, 3, 3), 0.5f, 1);
                             BoomDice(_placedGridItem, _delay);
 
                         }
@@ -195,15 +218,16 @@ public class M_Grid : MonoBehaviour
             }
             for (int i = 0; i < _succeedList.Count; i++)
             {
-                StartCoroutine(RecursiveSucceedControlIE(new List<GridItem>() { _succeedList[i] }, _delay));
+                yield return new WaitForSeconds(_delay-0.75f);
+                StartCoroutine(RecursiveSucceedControlIE(new List<GridItem>() { _succeedList[i] }));
             }
         }
     }
-    IEnumerator RecursiveSucceedControlIE(List<GridItem> placedGridItemList, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        RecursiveSucceedControl(placedGridItemList);
-    }
+  //  IEnumerator RecursiveSucceedControlIE(List<GridItem> placedGridItemList, float delay)
+  //  {
+  //      yield return new WaitForSeconds(delay);
+  //      RecursiveSucceedControl(placedGridItemList);
+  //  }
     void RecursiveFoundNearGrids(List<GridItem> placedGridItemList, int placedGridItemNumber)
     {
         GridItem _placedGridItem = placedGridItemList[placedGridItemNumber];
@@ -279,7 +303,7 @@ public class M_Grid : MonoBehaviour
         float _pathDistance = 0;
         for (int i = 0; i < dicePathList.Count - 1; i++)
         {
-            _pathDistance += Vector3.Distance(dicePathList[i], dicePathList[i + 1]);
+            _pathDistance += (Vector3.Distance(dicePathList[i], dicePathList[i + 1]))/2;
         }
         return _pathDistance;
     }
@@ -355,7 +379,7 @@ public class M_Grid : MonoBehaviour
             }
             if (_counter == 2) break;
         }
-        if (_counter!=2)
+        if (_counter != 2)
         {
             for (int i = 0; i < GridLenghtI; i++)
             {

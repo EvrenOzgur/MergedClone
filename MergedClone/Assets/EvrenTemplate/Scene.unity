@@ -612,6 +612,8 @@ MonoBehaviour:
   - {fileID: 7919105234775380254, guid: 04f3ba7178b63de4d90cbcafc754a1a8, type: 3}
   CurrentLevel: {fileID: 0}
   LevelIndex: 0
+  HighScore: 0
+  CurrentLevelScore: 0
 --- !u!4 &1402197656
 Transform:
   m_ObjectHideFlags: 0
@@ -720,7 +722,7 @@ MonoBehaviour:
   CurrentDice2: {fileID: 0}
   SpawnDiceCount: 2
   InstantiateDiceNumber: 3
-  InstantiateBoomDiceNumber: 0
+  InstantiateBoomDiceNumber: 1
   IsOneDice: 0
   DiceContainerOffset: {x: 0, y: 1, z: -1}
 --- !u!1 &1623731526
@@ -984,7 +986,7 @@ Transform:
   m_GameObject: {fileID: 2064325084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1574885115}
