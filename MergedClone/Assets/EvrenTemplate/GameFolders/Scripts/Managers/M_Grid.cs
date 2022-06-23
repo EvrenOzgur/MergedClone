@@ -49,7 +49,7 @@ public class M_Grid : MonoBehaviour
                 if (GridArray[_controlX, _controlY].IsFull == false)
                 {
                     _dice1.transform.SetParent(GridArray[_controlX, _controlY].transform);
-                    _dice1.transform.localPosition = Vector3.zero;
+                    _dice1.transform.localPosition = new Vector3(0, 0, -0.1f);
                     _dice1.CurrentGridItem = GridArray[_controlX, _controlY];
                     GridArray[_controlX, _controlY].CurrentDice = _dice1;
                     GridArray[_controlX, _controlY].IsFull = true;
@@ -82,13 +82,13 @@ public class M_Grid : MonoBehaviour
                 if (GridArray[_controlX1, _controlY1].IsFull == false && GridArray[_controlX2, _controlY2].IsFull == false)
                 {
                     _dice1.transform.SetParent(GridArray[_controlX1, _controlY1].transform);
-                    _dice1.transform.localPosition = Vector3.zero;
+                    _dice1.transform.localPosition = new Vector3(0, 0, -0.1f);
                     _dice1.CurrentGridItem = GridArray[_controlX1, _controlY1];
                     GridArray[_controlX1, _controlY1].CurrentDice = _dice1;
                     GridArray[_controlX1, _controlY1].IsFull = true;
                     M_Spawner.I.CurrentDice1 = null;
                     _dice2.transform.SetParent(GridArray[_controlX2, _controlY2].transform);
-                    _dice2.transform.localPosition = Vector3.zero;
+                    _dice2.transform.localPosition = new Vector3(0,0,-0.1f);
                     _dice2.CurrentGridItem = GridArray[_controlX2, _controlY2];
                     GridArray[_controlX2, _controlY2].CurrentDice = _dice2;
                     GridArray[_controlX2, _controlY2].IsFull = true;
